@@ -1,0 +1,56 @@
+{
+  "name": "video-previewer",
+  "version": "1.0.0",
+  "description": "A TypeScript package for generating custom video previews",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OSintt/video-previewer"
+  },
+  "scripts": {
+    "build": "tsup",
+    "start": "node dist/index.js",
+    "format": "prettier --write src/**/*.ts",
+    "dev": "nodemon",
+    "prepublishOnly": "pnpm run build"
+  },
+  "tsup": {
+    "entry": [
+      "src/index.ts"
+    ],
+    "format": [
+      "cjs",
+      "esm"
+    ],
+    "dts": true,
+    "outDir": "dist",
+    "splitting": false,
+    "sourcemap": true,
+    "clean": true
+  },
+  "keywords": [
+    "thumbnails",
+    "video",
+    "previews",
+    "thumbnail-generator",
+    "video-preview-generator"
+  ],
+  "author": "OSintt",
+  "license": "MIT",
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^11.1.6",
+    "@swc/core": "^1.7.5",
+    "@types/fluent-ffmpeg": "^2.1.25",
+    "@types/node": "^22.1.0",
+    "nodemon": "^3.1.4",
+    "prettier": "^3.3.3",
+    "tsup": "^8.2.4",
+    "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "ffmpeg-static": "^5.2.0",
+    "fluent-ffmpeg": "^2.1.3"
+  }
+}
