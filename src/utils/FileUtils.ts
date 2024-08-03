@@ -7,8 +7,7 @@ const execPromise = promisify(exec);
 
 const runFFmpegCommand = async (command: string) => {
   try {
-    const { stdout, stderr } = await execPromise(command);
-    if (stderr) console.log(stderr);
+    const { stdout } = await execPromise(command);
     return stdout;
   } catch (error) {
     throw error;
