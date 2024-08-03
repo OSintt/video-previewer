@@ -14,10 +14,14 @@ class VideoPreviewer {
   private optionsStr: string = "";
   constructor(
     private video: string,
+    private outputDir: string,
     private captions: Caption[] = defaultCaptions,
     readonly options: FFmpegOptions = defaultOptions
   ) {
     this.tempDir = TEMP_PATH;
+    this.outputDir = outputDir.endsWith(".webp")
+      ? outputDir
+      : outputDir + ".webp";
   }
 
   private async cleanUp() {
@@ -72,7 +76,7 @@ class VideoPreviewer {
       const videoOutputPath = path.join(this.tempDir, "output.mp4");
       const fileListPath = path.join(this.tempDir, "filelist.txt");
       const clipsPath = path.join(this.tempDir, "clips.mp4");
-      const webpOutputPath = path.join(__dirname, "output.webp");
+      const webpOutputPath = this.outputDir;
       await writeVideo(this.video, videoOutputPath, this.optionsStr);
       if (!this.captions) throw new Error("Frames are not specified");
       const snapshotPaths: string[] = [];

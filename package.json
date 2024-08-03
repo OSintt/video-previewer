@@ -1,6 +1,6 @@
 {
   "name": "video-previewer",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A TypeScript package for generating custom video previews",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
