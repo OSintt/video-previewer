@@ -68,6 +68,15 @@ class VideoPreviewer {
     this.optionsStr = optionStr.trim();
   }
 
+  private async ensureOutputDirExists() {
+    const dir = path.dirname(this.outputDir);
+    try {
+      await fs.mkdir(dir, { recursive: true });
+    } catch (e) {
+      throw new Error("Error creating output directory");
+    }
+  }
+
   public async exec() {
     try {
       await this.cleanUp();
@@ -92,9 +101,11 @@ class VideoPreviewer {
         snapshotPaths.push(snapshotPath);
       }
       await mergeClips(snapshotPaths, clipsPath, fileListPath, this.optionsStr);
+      await this.ensureOutputDirExists();
       await transToWebp(clipsPath, webpOutputPath, this.optionsStr);
       return webpOutputPath;
     } catch (e) {
+      console.log(e);
       throw new Error("Error executing command");
     } finally {
       await this.cleanUp();

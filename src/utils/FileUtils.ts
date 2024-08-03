@@ -7,7 +7,8 @@ const execPromise = promisify(exec);
 
 const runFFmpegCommand = async (command: string) => {
   try {
-    const { stdout } = await execPromise(command);
+    const { stdout, stderr } = await execPromise(command);
+    if (stderr) console.log(stderr);
     return stdout;
   } catch (error) {
     throw error;
@@ -41,12 +42,13 @@ export const mergeClips = async (
 ) => {
   let command: string;
   if (inputs.length === 1) {
-    command = `ffmpeg -framerate 1 -i ${inputs[0]} ${options} ${output}`;
+    command = `ffmpeg -i ${inputs[0]} ${options} ${output}`;
   } else {
     const fileList = inputs.map((file) => `file '${file}'`).join("\n");
     await fs.writeFile(fileListPath, fileList);
     command = `ffmpeg -f concat -safe 0 -i ${fileListPath} ${options} ${output}`;
   }
+  console.log(command);
   await runFFmpegCommand(command);
 };
 
