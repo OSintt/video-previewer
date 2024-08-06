@@ -1,7 +1,8 @@
 import { exec } from "child_process";
 import { promisify } from "util";
 import { checkHasCuda, checkHasGPU, checkHasNpp } from "../utils/SystemUtils";
-import fs from "fs/promises";
+import axios from "axios";
+import fs from "fs";
 
 const execPromise = promisify(exec);
 
@@ -14,13 +15,30 @@ const runFFmpegCommand = async (command: string) => {
   }
 };
 
-export const writeVideo = async (
-  input: string,
-  output: string,
-  options: string
-) => {
-  const command = `ffmpeg -i ${input} ${options} ${output}`;
-  return runFFmpegCommand(command);
+async function downloadVideo(
+  url: string,
+  filename: string
+): Promise<string | null> {
+  if (!filename.endsWith(".mp4")) filename += ".mp4";
+  const directory = filename.substring(0, filename.lastIndexOf("/"));
+  if (directory && !fs.existsSync(directory)) {
+    fs.mkdirSync(directory, { recursive: true });
+  }
+  const response = await axios.get(url, { responseType: "stream" });
+  if (response.status === 200) {
+    const writer = fs.createWriteStream(filename);
+    response.data.pipe(writer);
+    return new Promise((resolve, reject) => {
+      writer.on("finish", () => resolve(filename));
+      writer.on("error", reject);
+    });
+  } else {
+    return null;
+  }
+}
+
+export const writeVideo = async (input: string, output: string) => {
+  return downloadVideo(input, output);
 };
 
 export const extractClip = async (
@@ -44,10 +62,9 @@ export const mergeClips = async (
     command = `ffmpeg -i ${inputs[0]} ${options} ${output}`;
   } else {
     const fileList = inputs.map((file) => `file '${file}'`).join("\n");
-    await fs.writeFile(fileListPath, fileList);
+    fs.writeFileSync(fileListPath, fileList);
     command = `ffmpeg -f concat -safe 0 -i ${fileListPath} ${options} ${output}`;
   }
-  console.log(command);
   await runFFmpegCommand(command);
 };
 

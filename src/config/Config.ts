@@ -2,7 +2,7 @@ import path from "path";
 import { tmpdir } from "os";
 const CLIP_COUNT = 5;
 const CLIP_TIME = 5;
-const SPEED_MULTI = 2;
+const SPEED_MULTI = 1;
 const CLIP_SELECT_STRATEGY = "max-size"; // max-size min-size random
 const CLIP_RANGE = [0.1, 0.9];
 const FPS_RATE = -1;

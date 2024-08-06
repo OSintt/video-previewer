@@ -86,7 +86,7 @@ class VideoPreviewer {
       const fileListPath = path.join(this.tempDir, "filelist.txt");
       const clipsPath = path.join(this.tempDir, "clips.mp4");
       const webpOutputPath = this.outputDir;
-      await writeVideo(this.video, videoOutputPath, this.optionsStr);
+      await writeVideo(this.video, videoOutputPath);
       if (!this.captions) throw new Error("Frames are not specified");
       const snapshotPaths: string[] = [];
       for (let i = 0; i < this.captions.length; i++) {
